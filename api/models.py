@@ -6,4 +6,4 @@ from django.contrib.auth.models import User
 class ShiftsUser(User):
 
     is_team_lead = models.BooleanField(verbose_name="is_team_lead", default=False)
-    team_lead = models.CharField(verbose_name='username',max_length=150)
+    team_lead = models.CharField(verbose_name='Team Lead Name',max_length=150)
