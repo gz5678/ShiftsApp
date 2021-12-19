@@ -1,0 +1,108 @@
+[
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "username": "gil",
+            "password": "1234",
+            "first_name": "Gil",
+            "last_name": "Zivor",
+            "email": "test@test.com"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 2,
+        "fields": {
+            "username": "shir",
+            "password": "1234",
+            "first_name": "Shir",
+            "last_name": "Doctorman",
+            "email": "test@test.com"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 3,
+        "fields": {
+            "username": "bartzvi",
+            "password": "1234",
+            "first_name": "Bartzvi",
+            "last_name": "Doctorman",
+            "email": "test@test.com"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 4,
+        "fields": {
+            "username": "amit",
+            "password": "1234",
+            "first_name": "Amit",
+            "last_name": "Doctorman",
+            "email": "test@test.com"
+        }
+    },
+    {
+        "model": "api.shiftsuser",
+        "pk": 1,
+        "fields": {
+            "user_ptr_id": 1,
+            "is_team_lead": true
+        }
+    },
+    {
+        "model": "api.shiftsuser",
+        "pk": 2,
+        "fields": {
+            "user_ptr_id": 2,
+            "is_team_lead": true
+        }
+    },
+    {
+        "model": "api.shiftsuser",
+        "pk": 3,
+        "fields": {
+            "user_ptr_id": 3,
+            "is_team_lead": false
+        }
+    },
+    {
+        "model": "api.shiftsuser",
+        "pk": 4,
+        "fields": {
+            "user_ptr_id": 4,
+            "is_team_lead": false
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 1,
+        "fields": {
+            "name": "gil"
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 2,
+        "fields": {
+            "name": "shir"
+        }
+    },
+    {
+        "model": "auth.user_groups",
+        "pk": 1,
+        "fields": {
+            "user_id": 3,
+            "group_id": 1
+        }
+    },
+    {
+        "model": "auth.user_groups",
+        "pk": 2,
+        "fields": {
+            "user_id": 4,
+            "group_id": 2
+        }
+    }
+]
