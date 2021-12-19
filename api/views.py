@@ -34,14 +34,11 @@ class CreateUserView(APIView):
                     # Don't neet to check if the group exists since username is unique
                     team_lead_group = Group.objects.create(name=f"{username}")
                     user.groups.add(team_lead_group)
-                    # For now, a team lead is also the team lead of itself
-                    user.team_lead = username
                 else:
                     # User is not a team lead. Get team lead and save to field.
                     user.is_team_lead = False
                     team_lead_group = Group.objects.get(name=f"{team_lead}") # Have the frontend map between user name and first + last name
                     user.groups.add(team_lead_group)
-                    user.team_lead = team_lead
                 user.save()
                 return Response(self.serializer_class(user).data, status=status.HTTP_201_CREATED)
         return # TODO: Return some error code response

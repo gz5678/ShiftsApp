@@ -3,9 +3,11 @@ from .models import ShiftsUser
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
+    team_lead = serializers.CharField()
+
     class Meta:
         model = ShiftsUser
-        fields = ('username', 'password', 'email', 'first_name', 'last_name', 'team_lead')
+        fields = ('username', 'password', 'email', 'first_name', 'last_name')
 
 class GetTeamLeadGroupUsers(serializers.ModelSerializer):
     class Meta:
