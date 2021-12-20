@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import Group
 from .serializers import CreateUserSerializer, GetTeamLeadGroupUsers, GetPositions
-from .models import ShiftsUser, Positions
+from .models import ShiftsUser, Position
 
 class CreateUserView(APIView):
 
@@ -60,8 +60,8 @@ class GetPositions(APIView):
 
     def get(self, request, id, format=None):
         if id:
-            position = Positions.objects.get(pk=id)
+            position = Position.objects.get(pk=id)
             return Response(self.serializer_class(position), status=status.HTTP_200_OK)
         else:
-            positions = Positions.objects.all()
+            positions = Position.objects.all()
             return Response(self.serializer_class(positions, many=True), status=status.HTTP_200_OK)
