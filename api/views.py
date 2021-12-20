@@ -50,7 +50,7 @@ class GetTeamLeadGroupUsers(APIView):
     def get(self, request, username, format=None):
         if username:
             users = ShiftsUser.objects.filter(groups__name=f"{username}")
-            return Response(self.serializer_class(users).data, status=status.HTTP_200_OK)
+            return Response(self.serializer_class(users, many=True).data, status=status.HTTP_200_OK)
         else:
             pass
             #TODO: Username has to be given
