@@ -17,4 +17,4 @@ class GetTeamLeadGroupUsers(serializers.ModelSerializer):
 class GetPositions(serializers.ModelSerializer):
     class Meta:
         model = Position
-        fields = ('name')
+        fields = ('name',)

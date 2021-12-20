@@ -61,7 +61,7 @@ class GetPositions(APIView):
     def get(self, request, id, format=None):
         if id:
             position = Position.objects.get(pk=id)
-            return Response(self.serializer_class(position), status=status.HTTP_200_OK)
+            return Response(self.serializer_class(position).data, status=status.HTTP_200_OK)
         else:
             positions = Position.objects.all()
-            return Response(self.serializer_class(positions, many=True), status=status.HTTP_200_OK)
+            return Response(self.serializer_class(positions, many=True).data, status=status.HTTP_200_OK)
