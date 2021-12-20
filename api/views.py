@@ -58,7 +58,7 @@ class GetTeamLeadGroupUsers(APIView):
 class GetPositions(APIView):
     serializer_class = GetPositions
 
-    def get(self, request, id, format=None):
+    def get(self, request, id=None, format=None):
         if id:
             position = Position.objects.get(pk=id)
             return Response(self.serializer_class(position).data, status=status.HTTP_200_OK)
