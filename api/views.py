@@ -3,8 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import Group
-from .serializers import CreateUserSerializer, GetTeamLeadGroupUsers
-from .models import ShiftsUser
+from .serializers import CreateUserSerializer, GetTeamLeadGroupUsers, GetPositions
+from .models import ShiftsUser, Positions
 
 class CreateUserView(APIView):
 
@@ -54,3 +54,14 @@ class GetTeamLeadGroupUsers(APIView):
         else:
             pass
             #TODO: Username has to be given
+
+class GetPositions(APIView):
+    serializer_class = GetPositions
+
+    def get(self, request, id, format=None):
+        if id:
+            position = Positions.objects.get(pk=id)
+            return Response(self.serializer_class(position), status=status.HTTP_200_OK)
+        else:
+            positions = Positions.objects.all()
+            return Response(self.serializer_class(positions, many=True), status=status.HTTP_200_OK)
