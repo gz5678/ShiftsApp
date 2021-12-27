@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ShiftsUser, Position
+from .models import ShiftsUser, Position, UserPosition
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
@@ -26,3 +26,8 @@ class GetPositions(serializers.ModelSerializer):
     class Meta:
         model = Position
         fields = ('name',)
+
+class UserPosition(serializers.ModelSerializer):
+    class Meta:
+        model = UserPosition
+        fields = ('date', 'user', 'position')

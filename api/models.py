@@ -10,7 +10,7 @@ class ShiftsUser(User):
 class Position(models.Model):
     name = models.CharField(verbose_name="Position Name", max_length=100, unique=True)
 
-class UserPositions(models.Model):
+class UserPosition(models.Model):
     date = models.DateField()
     user = ForeignKey(ShiftsUser, on_delete=models.CASCADE)
-    positions = ForeignKey(Position, on_delete=models.CASCADE)
+    position = ForeignKey(Position, on_delete=models.CASCADE)
