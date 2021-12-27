@@ -3,11 +3,19 @@ from .models import ShiftsUser, Position
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
-    team_lead = serializers.CharField()
+    team_lead = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = ShiftsUser
-        fields = ('username', 'password', 'email', 'first_name', 'last_name')
+        fields = ('username', 'password', 'email', 'first_name', 'last_name', 'team_lead',)
+
+    def get_team_lead(self, obj):
+        # Return the team lead if we are in the post situation. In this case, self has the initial data of the request.
+        if hasattr(self, 'initial_data'):
+            return self.initial_data.get('team_lead')
+        # Otherwise, obj is a user and we return the name of the group the user is in
+        else:
+            return obj.groups.all()[0].name
 
 class GetTeamLeadGroupUsers(serializers.ModelSerializer):
     class Meta:

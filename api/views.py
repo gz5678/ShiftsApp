@@ -41,7 +41,7 @@ class CreateUserView(APIView):
                     user.groups.add(team_lead_group)
                 user.save()
                 return Response(self.serializer_class(user).data, status=status.HTTP_201_CREATED)
-        return # TODO: Return some error code response
+        return Response(f"Couldn't validate data: {request.data}", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class GetTeamLeadGroupUsers(APIView):
 
