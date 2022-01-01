@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link, Redirect, Switch } from 'react-router-dom';
+import SignInPage from './SignInPage';
 
 export default class HomePage extends Component {
     constructor(props) {
@@ -10,9 +11,10 @@ export default class HomePage extends Component {
         return (
             <Router>
                 <Switch>
-                    <Route path="/">
+                    <Route exact path="/">
                         <p>This is the home page</p>
                     </Route>
+                    <Route path="/login" component={SignInPage} />
                 </Switch>
             </Router>
         );
