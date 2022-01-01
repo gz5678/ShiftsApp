@@ -6,5 +6,6 @@ urlpatterns = [
     path('position/', GetPositions.as_view()),
     path('position/<int:id>', GetPositions.as_view()),
     path('userposition/', UserPosition.as_view()),
-    path('userposition/<int:id>', UserPosition.as_view()),
+    path('userposition/<int:user_id>', UserPosition.as_view()),
+    path('userposition/<int:user_id>/<int:position_id>', UserPosition.as_view()),
 ]

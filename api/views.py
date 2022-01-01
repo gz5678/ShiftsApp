@@ -81,10 +81,10 @@ class UserPosition(APIView):
             return Response(f"User {user.username} manned position {position.name} on {date} saved successfuly", status=status.HTTP_200_OK)
         return Response(f"Couldn't save user manning position: {request.data}", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def get(self, request, id=None, format=None):
-        if id:
-            userposition = UserPositionModel.objects.get(pk=id)
-            return Response(self.serializer_class(userposition).data, status=status.HTTP_200_OK)
+    def get(self, request, user_id, position_id=None, format=None):
+        userpositions = None
+        if position_id:
+            userpositions = UserPositionModel.objects.filter(user=user_id, position=position_id)
         else:
-            userpositions = UserPositionModel.objects.all()
-            return Response(self.serializer_class(userpositions, many=True).data, status=status.HTTP_200_OK)
+            userpositions = UserPositionModel.objects.filter(user=user_id)
+        return Response(self.serializer_class(userpositions, many=True).data, status=status.HTTP_200_OK)
