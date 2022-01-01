@@ -10,6 +10,9 @@ class ShiftsUser(User):
 class Position(models.Model):
     name = models.CharField(verbose_name="Position Name", max_length=100, unique=True)
 
+    def __str__(self):
+        return self.name
+
 class UserPosition(models.Model):
     date = models.DateField()
     user = ForeignKey(ShiftsUser, on_delete=models.CASCADE)

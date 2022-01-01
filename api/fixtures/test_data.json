@@ -104,5 +104,23 @@
             "user_id": 4,
             "group_id": 2
         }
+    },
+    {
+        "model": "api.userposition",
+        "pk": 1,
+        "fields": {
+            "date": "2021-12-01",
+            "user": 1,
+            "position": 1
+        }
+    },
+    {
+        "model": "api.userposition",
+        "pk": 2,
+        "fields": {
+            "date": "2021-12-02",
+            "user": 2,
+            "position": 1
+        }
     }
 ]

@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import Group
 from .serializers import CreateUserSerializer, GetTeamLeadGroupUsers, GetPositions, UserPosition
-from .models import ShiftsUser, Position, UserPosition
+from .models import ShiftsUser, Position, UserPosition as UserPositionModel
 
 class CreateUserView(APIView):
 
@@ -74,8 +74,17 @@ class UserPosition(APIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             date = serializer.data.get('date')
-            user = serializer.data.get('user')
-            position = serializer.data.get('position')
-            userposition = ShiftsUser.objects.create(date, user, position)
-            return Response(f"User {user} manned position {position} on {date} saved successfuly", status=status.HTTP_200_OK)
+            user = ShiftsUser.objects.get(pk=serializer.data.get('user'))
+            position = Position.objects.get(pk=serializer.data.get('position'))
+            userposition = UserPositionModel(date=date, user=user, position=position)
+            userposition.save()
+            return Response(f"User {user.username} manned position {position.name} on {date} saved successfuly", status=status.HTTP_200_OK)
         return Response(f"Couldn't save user manning position: {request.data}", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def get(self, request, id=None, format=None):
+        if id:
+            userposition = UserPositionModel.objects.get(pk=id)
+            return Response(self.serializer_class(userposition).data, status=status.HTTP_200_OK)
+        else:
+            userpositions = UserPositionModel.objects.all()
+            return Response(self.serializer_class(userpositions, many=True).data, status=status.HTTP_200_OK)
