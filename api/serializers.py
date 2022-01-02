@@ -17,6 +17,11 @@ class CreateUserSerializer(serializers.ModelSerializer):
         else:
             return obj.groups.all()[0].name
 
+class GetTeamLeadsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShiftsUser
+        fields = ('username', 'first_name', 'last_name')
+
 class GetTeamLeadGroupUsers(serializers.ModelSerializer):
     class Meta:
         model = ShiftsUser

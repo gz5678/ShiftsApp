@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import Group
-from .serializers import CreateUserSerializer, GetTeamLeadGroupUsers, GetPositions, UserPosition
+from .serializers import CreateUserSerializer, GetTeamLeadGroupUsers, GetPositions, UserPosition, GetTeamLeadsSerializer
 from .models import ShiftsUser, Position, UserPosition as UserPositionModel
 
 class CreateUserView(APIView):
@@ -42,6 +42,13 @@ class CreateUserView(APIView):
                 user.save()
                 return Response(f"User {username} created successfuly", status=status.HTTP_201_CREATED)
         return Response(f"Couldn't validate data: {request.data}", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GetTeamLeads(APIView):
+    serializer_class = GetTeamLeadsSerializer
+
+    def get(self, request, format=None):
+        team_leads = ShiftsUser.objects.filter(is_team_lead=True)
+        return Response(self.serializer_class(team_leads, many=True).data, status=status.HTTP_200_OK) 
 
 class GetTeamLeadGroupUsers(APIView):
 

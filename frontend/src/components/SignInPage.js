@@ -22,14 +22,39 @@ export default class SignInPage extends Component {
                 email: "",
                 team_lead: "",
             },
+            teamLeads: {
+                "I am a team lead": "I am a team lead",
+            },
         };
         this.handleClick = this.handleClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
+    }
+
+    componentDidMount() {
+        const requestOptions = {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+        };
+        fetch("api/user/teamleads/", requestOptions)
+            .then((response) => response.json())
+            .then((data) => {
+                const transformed = data.reduce((cur, val) => ({
+                    ...cur,
+                    [val.username]: val.first_name + " " + val.last_name,
+                }), {});
+                const { _, teamLeads } = this.state;
+                this.setState({
+                    teamLeads: {
+                        ...teamLeads,
+                        ...transformed,
+                    },
+                });
+            });
     }
 
     handleChange(event) {
-        const { formData } = this.state;
-
+        const { formData, _ } = this.state;
         this.setState({
             formData: {
                 ...formData,
@@ -51,7 +76,6 @@ export default class SignInPage extends Component {
                 team_lead: this.state.formData.team_lead,
             }),
         };
-        console.log(this.state.formData);
         fetch("api/user/", requestOptions)
             .then((response) => response.json())
             .then((data) => console.log(data));
@@ -153,7 +177,13 @@ export default class SignInPage extends Component {
                             value={this.state.formData.team_lead}
                             onChange={this.handleChange}
                         >
-                            <MenuItem value={"I am a team lead"}>I am a team lead</MenuItem>
+                            {Object.keys(this.state.teamLeads).map((key) => {
+                                return (
+                                    <MenuItem value={key} key={key}>
+                                        {this.state.teamLeads[key]}
+                                    </MenuItem>
+                                );
+                            })}
                         </Select>
                     </FormControl>
                     <FormHelperText>
