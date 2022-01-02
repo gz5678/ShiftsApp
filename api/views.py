@@ -40,7 +40,7 @@ class CreateUserView(APIView):
                     team_lead_group = Group.objects.get(name=f"{team_lead}") # Have the frontend map between user name and first + last name
                     user.groups.add(team_lead_group)
                 user.save()
-                return Response(self.serializer_class(user).data, status=status.HTTP_201_CREATED)
+                return Response(f"User {username} created successfuly", status=status.HTTP_201_CREATED)
         return Response(f"Couldn't validate data: {request.data}", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class GetTeamLeadGroupUsers(APIView):
