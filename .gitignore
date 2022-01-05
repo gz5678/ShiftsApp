@@ -4,3 +4,4 @@ db.sqlite3
 frontend/node_modules/**
 shift_app/settings.py
 .vscode/**
+node_modules
