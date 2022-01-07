@@ -1,7 +1,8 @@
-from django.urls import path
+from django.urls import path, include
 from .views import CreateUserView, GetTeamLeadGroupUsers, GetPositions, UserPosition, GetTeamLeads
 urlpatterns = [
-    path('user/', CreateUserView.as_view()),
+    path('rest-auth/', include('rest_auth.urls')),
+    path('rest-auth/registration/', CreateUserView.as_view()),
     path('user/teamleads/', GetTeamLeads.as_view()),
     path('team/<str:username>', GetTeamLeadGroupUsers.as_view()),
     path('position/', GetPositions.as_view()),

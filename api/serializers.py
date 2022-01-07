@@ -1,13 +1,13 @@
 from rest_framework import serializers
-from .models import ShiftsUser, Position, UserPosition
-
+from .models import Position, UserPosition, ShiftsUser
+from django.contrib.auth.models import User
 
 class CreateUserSerializer(serializers.ModelSerializer):
     team_lead = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model = ShiftsUser
-        fields = ('username', 'password', 'email', 'first_name', 'last_name', 'team_lead',)
+        model = User
+        fields = ('first_name', 'last_name', 'team_lead',)
 
     def get_team_lead(self, obj):
         # Return the team lead if we are in the post situation. In this case, self has the initial data of the request.
@@ -19,12 +19,12 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
 class GetTeamLeadsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ShiftsUser
+        model = User
         fields = ('username', 'first_name', 'last_name')
 
 class GetTeamLeadGroupUsers(serializers.ModelSerializer):
     class Meta:
-        model = ShiftsUser
+        model = User
         fields = ('first_name', 'last_name')
 
 class GetPositions(serializers.ModelSerializer):

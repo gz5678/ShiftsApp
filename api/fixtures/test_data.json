@@ -47,7 +47,7 @@
         "model": "api.shiftsuser",
         "pk": 1,
         "fields": {
-            "user_ptr_id": 1,
+            "user": 1,
             "is_team_lead": true
         }
     },
@@ -55,7 +55,7 @@
         "model": "api.shiftsuser",
         "pk": 2,
         "fields": {
-            "user_ptr_id": 2,
+            "user": 2,
             "is_team_lead": true
         }
     },
@@ -63,7 +63,7 @@
         "model": "api.shiftsuser",
         "pk": 3,
         "fields": {
-            "user_ptr_id": 3,
+            "user": 3,
             "is_team_lead": false
         }
     },
@@ -71,7 +71,7 @@
         "model": "api.shiftsuser",
         "pk": 4,
         "fields": {
-            "user_ptr_id": 4,
+            "user": 4,
             "is_team_lead": false
         }
     },

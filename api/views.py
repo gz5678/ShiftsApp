@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth.models import Group
+from rest_framework import serializers, status
+from rest_auth.registration.views import RegisterView
+from django.contrib.auth.models import Group, User
 from .serializers import CreateUserSerializer, GetTeamLeadGroupUsers, GetPositions, UserPosition, GetTeamLeadsSerializer
 from .models import ShiftsUser, Position, UserPosition as UserPositionModel
 
@@ -10,44 +11,38 @@ class CreateUserView(APIView):
 
     serializer_class = CreateUserSerializer
 
-    def post(self, request, format=None):
-        # TODO:CHECK IF NEED SESSION
+    def post(self, request, *args, **kwargs):
+        response = RegisterView.as_view()(request, args, kwargs)
+        if response.status_code != status.HTTP_201_CREATED:
+            return response
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            username = serializer.data.get('username')
-            password = serializer.data.get('password')
+            user = User.objects.get(username=serializer.data.get('username'))
             first_name = serializer.data.get('first_name')
             last_name = serializer.data.get('last_name')
-            email = serializer.data.get('email')
             team_lead = serializer.data.get('team_lead')
-            queryset = ShiftsUser.objects.filter(username=username, email=email)
-            if queryset.exists():
-                # TODO: A user already exists, return error
-                return
+            user.first_name = first_name
+            user.last_name = last_name
+            # User is a new team lead
+            if team_lead == "I am a team lead":
+                _ = ShiftsUser(user=user, is_team_lead=True)
+                # Don't neet to check if the group exists since username is unique
+                team_lead_group = Group.objects.create(name=f"{user.username}")
+                user.groups.add(team_lead_group)
             else:
-                user = ShiftsUser.objects.create_user(username, email, password)
-                user.first_name = first_name
-                user.last_name = last_name
-                # User is a new team lead
-                if team_lead == "I am a team lead":
-                    user.is_team_lead = True
-                    # Don't neet to check if the group exists since username is unique
-                    team_lead_group = Group.objects.create(name=f"{username}")
-                    user.groups.add(team_lead_group)
-                else:
-                    # User is not a team lead. Get team lead and save to field.
-                    user.is_team_lead = False
-                    team_lead_group = Group.objects.get(name=f"{team_lead}") # Have the frontend map between user name and first + last name
-                    user.groups.add(team_lead_group)
-                user.save()
-                return Response(f"User {username} created successfuly", status=status.HTTP_201_CREATED)
-        return Response(f"Couldn't validate data: {request.data}", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                # User is not a team lead. Get team lead and save to field.
+                _ = ShiftsUser(user=user, is_team_lead=False)
+                team_lead_group = Group.objects.get(name=f"{team_lead}") # Have the frontend map between user name and first + last name
+                user.groups.add(team_lead_group)
+            user.save()
+        return response
 
 class GetTeamLeads(APIView):
     serializer_class = GetTeamLeadsSerializer
 
     def get(self, request, format=None):
         team_leads = ShiftsUser.objects.filter(is_team_lead=True)
+        team_leads = [lead.user for lead in team_leads]
         return Response(self.serializer_class(team_leads, many=True).data, status=status.HTTP_200_OK) 
 
 class GetTeamLeadGroupUsers(APIView):
@@ -56,7 +51,7 @@ class GetTeamLeadGroupUsers(APIView):
 
     def get(self, request, username, format=None):
         if username:
-            users = ShiftsUser.objects.filter(groups__name=f"{username}")
+            users = User.objects.filter(groups__name=f"{username}")
             return Response(self.serializer_class(users, many=True).data, status=status.HTTP_200_OK)
         else:
             pass
@@ -81,7 +76,7 @@ class UserPosition(APIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             date = serializer.data.get('date')
-            user = ShiftsUser.objects.get(pk=serializer.data.get('user'))
+            user = User.objects.get(pk=serializer.data.get('user'))
             position = Position.objects.get(pk=serializer.data.get('position'))
             userposition = UserPositionModel(date=date, user=user, position=position)
             userposition.save()

@@ -1,18 +1,32 @@
-import React, { Component } from "react";
-import { render } from "react-dom";
-import HomePage from "./HomePage";
+import { Component } from "react";
+import { BrowserRouter, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
+import SignUpPage from './SignUpPage';
+import * as actions from '../store/actions/auth';
 
-export default class App extends Component {
-    constructor(props) {
-        super(props);
+class App extends Component {
+
+    componentDidMount() {
+        this.props.onTryAutoSignup();
     }
 
     render() {
         return (
-            <HomePage />
+            <SignUpPage {...this.props}></SignUpPage>
         );
     }
 }
 
-const appDiv = document.getElementById("app");
-render(<App />, appDiv);
+const mapStateToProps = state => {
+    return {
+        isAuthenticated: state.token != null
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onTryAutoSignup: () => dispatch(actions.authCheckState())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

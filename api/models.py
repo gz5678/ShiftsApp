@@ -4,7 +4,8 @@ from django.db.models.fields.related import ForeignKey
 
 # Create your models here.
 
-class ShiftsUser(User):
+class ShiftsUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_team_lead = models.BooleanField(verbose_name="is_team_lead", default=False)
 
 class Position(models.Model):
@@ -15,5 +16,5 @@ class Position(models.Model):
 
 class UserPosition(models.Model):
     date = models.DateField()
-    user = ForeignKey(ShiftsUser, on_delete=models.CASCADE)
+    user = ForeignKey(User, on_delete=models.CASCADE)
     position = ForeignKey(Position, on_delete=models.CASCADE)

@@ -1,4 +1,6 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -9,6 +11,12 @@ import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import {
+    MenuItem,
+    Select,
+    InputLabel,
+    FormControl,
+} from "@material-ui/core/";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 
 function Copyright(props) {
@@ -32,6 +40,11 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
+    const [teamLeads, setTeamLeads] = useState(
+        JSON.stringify({ I_am_a_team_lead: "I am a team lead" })
+    );
+    const [teamLead, setTeamLead] = useState("");
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -39,8 +52,34 @@ export default function SignUp() {
         console.log({
             email: data.get("email"),
             password: data.get("password"),
+            username: data.get("username"),
+            firstName: data.get("firstName"),
+            lastName: data.get("lastName"),
+            teamLead: data.get("teamLead"),
         });
     };
+
+    useEffect(() => {
+        axios
+            .get("/api/user/teamleads")
+            .then((response) => response.data)
+            .then((data) => {
+                const transformed = data.reduce(
+                    (cur, val) => ({
+                        ...cur,
+                        [val.username]: val.first_name + " " + val.last_name,
+                    }),
+                    {}
+                );
+                const cur = JSON.parse(teamLeads);
+                setTeamLeads(
+                    JSON.stringify({
+                        ...cur,
+                        ...transformed,
+                    })
+                );
+            });
+    }, [teamLeads]);
 
     return (
         <ThemeProvider theme={theme}>
@@ -92,10 +131,11 @@ export default function SignUp() {
                                 <TextField
                                     required
                                     fullWidth
-                                    id="email"
-                                    label="Email Address"
-                                    name="email"
-                                    autoComplete="email"
+                                    name="user"
+                                    label="Username"
+                                    type="username"
+                                    id="username"
+                                    autoComplete="username"
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -108,6 +148,44 @@ export default function SignUp() {
                                     id="password"
                                     autoComplete="new-password"
                                 />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    id="email"
+                                    label="Email Address"
+                                    name="email"
+                                    autoComplete="email"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl fullWidth required>
+                                    <InputLabel id="select-label" variant="standard">
+                                        Team Lead
+                                    </InputLabel>
+                                    <Select
+                                        placeholder="Team Lead"
+                                        labelId="select-label"
+                                        label="Team Lead"
+                                        name="teamLead"
+                                        id="teamLead"
+                                        value={teamLead}
+                                        onChange={(event) => {
+                                            setTeamLead(event.target.value);
+                                        }}
+                                    >
+                                        {Object.keys(JSON.parse(teamLeads)).map(
+                                            (key) => {
+                                                return (
+                                                    <MenuItem value={key} key={key}>
+                                                        {JSON.parse(teamLeads)[key]}
+                                                    </MenuItem>
+                                                );
+                                            }
+                                        )}
+                                    </Select>
+                                </FormControl>
                             </Grid>
                         </Grid>
                         <Button
